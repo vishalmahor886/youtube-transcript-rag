@@ -44,7 +44,7 @@ def process_video(data: dict):
 
     except Exception as e:
         print("ERROR:", str(e))
-        raise HTTPException(status_code=500, detail=str(e)
+        raise HTTPException(status_code=500, detail=str(e))
 
 @router.post("/ask")
 def ask_question(request: QuestionRequest):
