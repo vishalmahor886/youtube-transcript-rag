@@ -1,0 +1,16 @@
+langchain
+langchain-community
+langchain-core
+langchain-groq
+langchain-huggingface
+
+fastapi
+uvicorn
+python-dotenv
+pydantic
+tiktoken
+faiss-cpu
+youtube-transcript-api
+pytube
+
+sentence-transformers
