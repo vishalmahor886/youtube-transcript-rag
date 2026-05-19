@@ -2,7 +2,7 @@ from langchain_core.prompts import PromptTemplate
 from langchain_huggingface import HuggingFaceEndpoint, ChatHuggingFace
 import os
 from dotenv import load_dotenv
-load_dotenv("backend/.env")
+load_dotenv()
 def summarize_text(text:str):
         
     base_llm = HuggingFaceEndpoint(
