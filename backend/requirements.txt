@@ -12,5 +12,6 @@ tiktoken
 faiss-cpu
 youtube-transcript-api
 pytube
+dotenv
 
 sentence-transformers
