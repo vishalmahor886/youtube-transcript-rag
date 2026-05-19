@@ -1,8 +1,8 @@
 from langchain_community.vectorstores import FAISS
 import os
-from backend.app.services.youtube_service import extract_video_id, get_transcript
-from backend.app.utils.text_splitter import split_text
-from backend.app.services.embedding_service import get_embeddings
+from app.services.youtube_service import extract_video_id, get_transcript
+from app.utils.text_splitter import split_text
+from app.services.embedding_service import get_embeddings
 
 VECTOR_DB_PATH = "vector_store"
 

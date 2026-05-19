@@ -1,12 +1,12 @@
 from fastapi import APIRouter, HTTPException
 
-from backend.app.models.schemas import *
-from backend.app.services.youtube_service import extract_video_id, get_transcript
-from backend.app.utils.text_splitter import split_text
-from backend.app.services.embedding_service import get_embeddings
-from backend.app.services.vector_db_service import save_vector_store, load_vector_store
-from backend.app.services.rag_service import build_qa_chain
-from backend.app.services.summary_service import summarize_text
+from app.models.schemas import *
+from app.services.youtube_service import extract_video_id, get_transcript
+from app.utils.text_splitter import split_text
+from app.services.embedding_service import get_embeddings
+from app.services.vector_db_service import save_vector_store, load_vector_store
+from app.services.rag_service import build_qa_chain
+from app.services.summary_service import summarize_text
 
 from fastapi.responses import StreamingResponse
 
