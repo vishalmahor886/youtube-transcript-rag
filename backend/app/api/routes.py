@@ -14,25 +14,37 @@ from langchain_community.vectorstores import FAISS
 
 router = APIRouter()
 
+def normalize_url(url):
+    if "shorts" in url:
+        video_id = url.split("/")[-1]
+        return f"https://www.youtube.com/watch?v={video_id}"
+    return url
+
 
 @router.post("/process-video")
-def process_video(request: VideoRequest):
-    video_id = extract_video_id(request.youtube_url)
+def process_video(data: dict):
+    try:
+        youtube_url = normalize_url(data["youtube_url"])
 
-    if not video_id:
-        raise HTTPException(status_code=400, detail="Invalid YouTube URL")
+        # extract video id safely
+        if "v=" in youtube_url:
+            video_id = youtube_url.split("v=")[-1].split("&")[0]
+        else:
+            raise Exception("Invalid YouTube URL")
 
-    transcript = get_transcript(video_id)
-    chunks = split_text(transcript)
+        print("VIDEO ID:", video_id)
 
-    embeddings = get_embeddings()
+        # fetch transcript
+        try:
+            transcript = YouTubeTranscriptApi.get_transcript(video_id)
+        except Exception:
+            raise Exception("Transcript not available for this video")
 
-    vector_store = FAISS.from_texts(chunks, embeddings)
+        return {"video_id": video_id}
 
-    save_vector_store(vector_store, video_id)
-
-    return {"video_id": video_id, "message": "Processed successfully"}
-
+    except Exception as e:
+        print("ERROR:", str(e))
+        raise HTTPException(status_code=500, detail=str(e)
 
 @router.post("/ask")
 def ask_question(request: QuestionRequest):
