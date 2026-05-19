@@ -2,7 +2,7 @@ from langchain_classic.chains import RetrievalQA
 from langchain_huggingface import HuggingFaceEndpoint, ChatHuggingFace
 import os
 from dotenv import load_dotenv
-load_dotenv
+load_dotenv("backend/.env")
 def build_qa_chain(vector_store):
     # ✅ Retriever
     retriever = vector_store.as_retriever(search_kwargs={"k": 4})
