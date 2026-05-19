@@ -22,29 +22,23 @@ def normalize_url(url):
 
 
 @router.post("/process-video")
-def process_video(data: dict):
-    try:
-        youtube_url = normalize_url(data["youtube_url"])
+def process_video(request: VideoRequest):
+    video_id = extract_video_id(request.youtube_url)
 
-        # extract video id safely
-        if "v=" in youtube_url:
-            video_id = youtube_url.split("v=")[-1].split("&")[0]
-        else:
-            raise Exception("Invalid YouTube URL")
+    if not video_id:
+        raise HTTPException(status_code=400, detail="Invalid YouTube URL")
 
-        print("VIDEO ID:", video_id)
+    transcript = get_transcript(video_id)
+    chunks = split_text(transcript)
 
-        # fetch transcript
-        try:
-            transcript = YouTubeTranscriptApi.get_transcript(video_id)
-        except Exception:
-            raise Exception("Transcript not available for this video")
+    embeddings = get_embeddings()
 
-        return {"video_id": video_id}
+    vector_store = FAISS.from_texts(chunks, embeddings)
 
-    except Exception as e:
-        print("ERROR:", str(e))
-        raise HTTPException(status_code=500, detail=str(e))
+    save_vector_store(vector_store, video_id)
+
+    return {"video_id": video_id, "message": "Processed successfully"}
+
 
 @router.post("/ask")
 def ask_question(request: QuestionRequest):
