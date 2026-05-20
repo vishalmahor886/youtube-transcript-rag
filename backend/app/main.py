@@ -3,9 +3,8 @@ from app.api.routes import router
 from fastapi.middleware.cors import CORSMiddleware
 import os
 
-
-
 app = FastAPI(title="YouTube RAG Chatbot API")
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -23,6 +22,11 @@ def root():
 if __name__ == "__main__":
     import uvicorn
 
-    port = int(os.environ.get("PORT", 8000))
+    port = int(os.environ.get("PORT", 10000))  # 🔥 use 10000 default
 
-    uvicorn.run("app.main:app", host="0.0.0.0", port=port)
+    uvicorn.run(
+        "app.main:app",
+        host="0.0.0.0",
+        port=port,
+        reload=False  # IMPORTANT for production
+    )
