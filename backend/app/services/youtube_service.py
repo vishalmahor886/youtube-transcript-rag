@@ -24,6 +24,9 @@ def extract_video_id(url: str)-> str:
 
 def get_transcript(video_id:str)->str:
     try:
+        cookies_path = "/opt/render/project/src/cookies.txt"
+        if not os.path.exists(cookies_path):
+            cookies_path = "cookies.txt"
 
         youtube_transcript = YouTubeTranscriptApi()
         transcript_list = youtube_transcript.list(video_id)
