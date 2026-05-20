@@ -1,5 +1,6 @@
 from youtube_transcript_api import YouTubeTranscriptApi 
 import re
+import os
 
 
 ## Extract video id
