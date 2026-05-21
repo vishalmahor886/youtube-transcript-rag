@@ -22,36 +22,38 @@ def extract_video_id(url: str)-> str:
     raise ValueError("Invalid Youtube URL")
 
 
-
 def get_transcript(video_id: str) -> str:
     try:
-        # 1. Determine the path to your cookies.txt file
-        # Check the Render secret file location first, fallback to local for development
+        # 1. Cookies path (Render + local fallback)
         cookies_path = "/opt/render/project/src/cookies.txt"
         if not os.path.exists(cookies_path):
             cookies_path = "cookies.txt"
 
         youtube_transcript = YouTubeTranscriptApi()
 
-        # 2. Fetch the transcript list using cookies if the file exists
+        # 2. Load transcript list (with cookies if available)
         if os.path.exists(cookies_path):
             transcript_list = youtube_transcript.list(video_id, cookies=cookies_path)
         else:
-            # Fallback for local testing if you haven't set up a local cookies.txt yet
             transcript_list = youtube_transcript.list(video_id)
 
-        # 3. Your original fallback logic (Try English, fallback to Hindi)
+        # 3. Language fallback (EN → HI)
         try:
             transcript = transcript_list.find_transcript(["en"])
         except Exception:
             transcript = transcript_list.find_transcript(["hi"])
-        
-        # 4. Fetch the raw pieces and merge them into a single string
+
+        # 4. Fetch transcript
         data = transcript.fetch()
-        
-        # Note: 'element' is a dictionary, so we access it using ['text'] instead of .text
-        text = " ".join(element['text'] for element in data)
+
+        # ✅ FIX: handle object properly
+        text = " ".join(
+            element.text if hasattr(element, "text") else element["text"]
+            for element in data
+        )
+
         return text
-    
+
     except Exception as e:
-        raise Exception(f"Transcript error: {str(e)}")
+        print("❌ Transcript error:", e)
+        return None
